@@ -1,0 +1,27 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1504\cocoasubrtf820
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww21260\viewh10120\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 	\
+\
+	
+\b\fs36 Start Live View:
+\b0\fs24  curl -H 'Host: api.ring.com' -H 'Content-Type: application/json' -H 'Accept: */*' -H 'User-Agent: Ring/0.67 (Mac OS X Version 10.12.4 (Build 16E195))' -H 'Accept-Language: en-US;q=1' --data-binary '\{"api_version":"10","auth_token\'94:\'94[insert Auth Token]\'93\}\'92 --compressed 'https://api.ring.com/clients_api/doorbots/[device id for wanted live view]/vod'\
+\
+
+\b\fs36 Actually Connect to Video stream(
+\b0 same call to check for active video feeds)
+\fs24 : curl -H 'Host: api.ring.com' -H 'X-API-LANG: en' -H 'Accept: */*' -H 'User-Agent: Ring/0.67 (Mac OS X Version 10.12.4 (Build 16E195))' -H 'Accept-Language: en-US;q=1' --compressed 'https://api.ring.com/clients_api/dings/active?api_version=10&auth_token=[insert Auth Token]&burst=1'\
+\
+
+\b\fs36 End the Stream
+\b0\fs24 : curl -H 'Host: api.ring.com' -H 'Content-Type: application/json' -H 'Accept: */*' -H 'User-Agent: Ring/0.67 (Mac OS X Version 10.12.4 (Build 16E195))' -H 'Accept-Language: en-US;q=1' --data-binary '\{"api_version":"10","auth_token\'94:\'94[insert Auth Token]\'94\}\'92 --compressed 'https://api.ring.com/clients_api/dings/[insert call id]/hang-up'\
+\
+
+\b\fs36 Sends client Device Media Data: 
+\b0\fs24 curl -H 'Host: api.ring.com' -H 'Content-Type: application/json' -H 'Accept: */*' -H 'User-Agent: Ring/0.67 (Mac OS X Version 10.12.4 (Build 16E195))' -H 'Accept-Language: en-US;q=1' --data-binary '\{"api_version":"10","connection":\{"client_device_metadata":\{"min_bandwith_audio_out":0,"min_bandwith_audio_in":0,"tags":0,"min_bandwith_video_out":0,"max_bandwith_audio_in":0,"retries":0,"max_bandwith_video_in":0,"always_wifi":0,"first_video_frame_time":0,"relative_time":0,"avg_bandwith_audio_in":0,"min_bandwith_video_in":0,"video_rtp_data_time":0,"sip_connection_time":0,"quality":0,"max_bandwith_audio_out":0,"offset":0,"avg_bandwith_audio_out":0,"max_bandwith_video_out":0,"app_open_time":0,"ding_info_received":0,"avg_bandwith_video_out":0,"avg_bandwith_video_in":0,"absolute_time":0\}\},"auth_token\'94:\'94[auth token]\'93\}\'92 -X PUT --compressed 'https://api.ring.com/clients_api/dings/[ding id]/connection'\
+\
+I}

@@ -1,0 +1,526 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1504\cocoasubrtf830
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red251\green2\blue7;\red0\green0\blue255;
+}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\cssrgb\c100000\c14913\c0;\cssrgb\c1680\c19835\c100000;
+}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\b\fs22 \cf2 \expnd0\expndtw0\kerning0
+### Get Credentials\
+\pard\pardeftab720\partightenfactor0
+
+\b0 \cf2 # "Hardware id" is the serial number of your Mac, it is necessary to include in the body however it doesn't check for Authenticity\
+curl -X "POST" "https://api.ring.com/clients_api/session" \\\
+     -H "Accept-Encoding: gzip" \\\
+     -H "Accept: */*" \\\
+     -H "Content-Type: application/json" \\\
+     -H "Host: api.ring.com" \\\
+     -H "User-Agent: Ring/0.67 (Mac OS X Version 10.12.4 (Build 16E195))" \\\
+     -H "Accept-Language: en-US;q=1" \\\
+     -u [enter username]:[Enter password] \\\
+     -d $'\{\
+  "device": \{\
+    "metadata": \{\
+      "api_version": "10",\
+      "app_installation_date": "2017-06-01 11:06:51 +0000",\
+      "app_version": "v0.67 (92)"\
+    \},\
+    "hardware_id": "000000000000",\
+    "os": "osx",\
+    "app_brand": "ring"\
+  \}\
+\}'\
+\
+*Returns information about your account, including a field called "\cf3 Authentication_token\cf2 ", This is passed through to any following requests as a URL Parameter.\
+This is the only info I have seen use for from this call for our purposes.\
+\
+\
+\
+\pard\pardeftab720\partightenfactor0
+
+\b \cf2 ### Calls for Devices\
+\pard\pardeftab720\partightenfactor0
+
+\b0 \cf2 ## This then returns data about all your connected Ring Devices included the ID and name assigned to each device as well as the motion zones. I have included a sample of the data at the end of this\'85\
+\
+curl "https://api.ring.com/clients_api/ring_devices?api_version=10&auth_token=\cf3 -8s1X_HCpSNkJpx\cf2 " \\\
+     -H "Accept: */*" \\\
+     -H "Host: api.ring.com" \\\
+     -H "Accept-Encoding: gzip" \\\
+     -H "Accept-Language: en-US;q=1" \\\
+     -H "User-Agent: Ring/0.67 (Mac OS X Version 10.12.4 (Build 16E195))\'94\
+## This then returns data about all your connected Ring Devices included the ID and name assigned to each device as well as the motion zones. I have included a sample of the data at the end of this\'85\
+\pard\pardeftab720\partightenfactor0
+
+\b \cf2 \
+\
+### Polls Device History for last 30 events\
+\pard\pardeftab720\partightenfactor0
+
+\b0 \cf2 curl "https://api.ring.com/clients_api/doorbots/history?api_version=10&auth_token=\cf3 -8s1X_HCpSNkJpx\cf2 &limit=30" \\\
+     -H "Accept: */*" \\\
+     -H "Host: api.ring.com" \\\
+     -H "Accept-Encoding: gzip" \\\
+     -H "Accept-Language: en-US;q=1" \\\
+     -H "User-Agent: Ring/0.67 (Mac OS X Version 10.12.4 (Build 16E195))\'94\
+\
+\pard\pardeftab720\partightenfactor0
+
+\b \cf2 ### Polls to see if anything is active\
+\pard\pardeftab720\partightenfactor0
+
+\b0 \cf2 # If this responds with anything other than [ ], it responds with the SIP info needed to make a connection\
+curl "https://api.ring.com/clients_api/dings/active?api_version=10&auth_token=\cf3 -8s1X_HCpSNkJpx\cf2 " \\\
+     -H "Accept: */*" \\\
+     -H "Host: api.ring.com" \\\
+     -H "Accept-Encoding: gzip" \\\
+     -H "Accept-Language: en-US;q=1" \\\
+     -H "X-Api-Lang: en" \\\
+     -H "User-Agent: Ring/0.67 (Mac OS X Version 10.12.4 (Build 16E195))\'94\
+\
+* I have attached an example of what this data looks like\
+\
+\
+\
+\pard\pardeftab720\partightenfactor0
+
+\b \cf2 ## Terminates the SIP call\
+\pard\pardeftab720\partightenfactor0
+
+\b0 \cf2 # (I think). The \cf4 random string of numbers(Ding ID)\cf2  in the URL is the ID of the event that is provided when it polls active dings.\
+curl -X "POST" "https://api.ring.com/clients_api/dings/\cf4 3593676317/\cf2 hang-up" \\\
+     -H "Accept: */*" \\\
+     -H "Host: api.ring.com" \\\
+     -H "Accept-Encoding: gzip" \\\
+     -H "Accept-Language: en-US;q=1" \\\
+     -H "Content-Type: application/json" \\\
+     -H "User-Agent: Ring/0.67 (Mac OS X Version 10.12.4 (Build 16E195))" \\\
+     -d $'\{\
+  "api_version": "10",\
+  "auth_token": "\cf3 -8s1X_HCpSNkJpx\cf2 "\
+\}'\
+\
+\
+\pard\pardeftab720\partightenfactor0
+
+\fs36 \cf2 Sample Data\
+\
+\pard\pardeftab720\partightenfactor0
+
+\b\fs22 \cf2 \
+\
+Device Info:\
+\pard\pardeftab720\partightenfactor0
+
+\b0 \cf2 \
+\
+\{\
+  "doorbots": [\
+    \{\
+      "id": 57950,\
+      "description": "Backyard",\
+      "device_id": "001dc91cc5",\
+      "time_zone": "America/Phoenix",\
+      "subscribed": true,\
+      "subscribed_motions": true,\
+      "battery_life": "72",\
+      "external_connection": false,\
+      "firmware_version": "1.8.86",\
+      "kind": "doorbell",\
+      "latitude": redacted,\
+      "longitude": redacted,\
+      "address": "redacted",\
+      "settings": \{\
+        "enable_vod": 1,\
+        "exposure_control": 2,\
+        "motion_zones": [\
+          1,\
+          1,\
+          1,\
+          1,\
+          1\
+        ],\
+        "motion_snooze_preset_profile": "low",\
+        "motion_snooze_presets": [\
+          "none",\
+          "low",\
+          "medium",\
+          "high"\
+        ],\
+        "live_view_preset_profile": "middle",\
+        "live_view_presets": [\
+          "low",\
+          "middle",\
+          "high",\
+          "highest"\
+        ],\
+        "pir_sensitivity_1": 10,\
+        "vod_suspended": 0,\
+        "doorbell_volume": 8,\
+        "vod_status": "enabled"\
+      \},\
+      "features": \{\
+        "motions_enabled": true,\
+        "show_recordings": true,\
+        "show_vod_settings": true\
+      \},\
+      "owned": true,\
+      "alerts": \{\
+        "connection": "online"\
+      \},\
+      "motion_snooze": \{\
+        "scheduled": true\
+      \},\
+      "owner": \{\
+        "id": 18626,\
+        "first_name": "redacted",\
+        "last_name": "redacted",\
+        "email": "redacted@me.com"\
+      \}\
+    \},\
+    \{\
+      "id": 156746,\
+      "description": "Front Door",\
+      "device_id": "6c0b84f91",\
+      "time_zone": "America/Phoenix",\
+      "subscribed": true,\
+      "subscribed_motions": true,\
+      "battery_life": 4144,\
+      "external_connection": false,\
+      "firmware_version": "1.4.30",\
+      "kind": "lpd_v1",\
+      "latitude": redacted,\
+      "longitude": redacted,\
+      "address": "redacted",\
+      "settings": \{\
+        "enable_vod": true,\
+        "motion_zones": \{\
+          "enable_audio": false,\
+          "active_motion_filter": 2,\
+          "sensitivity": 5,\
+          "advanced_object_settings": \{\
+            "human_detection_confidence": \{\
+              "day": 0.9,\
+              "night": 0.9\
+            \},\
+            "motion_zone_overlap": \{\
+              "day": 0.4,\
+              "night": 0.5\
+            \},\
+            "object_time_overlap": \{\
+              "day": 1.0,\
+              "night": 2.0\
+            \},\
+            "object_size_minimum": \{\
+              "day": 0.06,\
+              "night": 0.11\
+            \},\
+            "object_size_maximum": \{\
+              "day": 0.5,\
+              "night": 0.5\
+            \}\
+          \},\
+          "zone1": \{\
+            "name": "Zone 1",\
+            "state": 2,\
+            "vertex1": \{\
+              "x": 0.411889339610563,\
+              "y": 0.664893617021277\
+            \},\
+            "vertex2": \{\
+              "x": 0.470214341716062,\
+              "y": 0.657801404912421\
+            \},\
+            "vertex3": \{\
+              "x": 0.516450648055832,\
+              "y": 0.700354555819897\
+            \},\
+            "vertex4": \{\
+              "x": 0.784521420479771,\
+              "y": 0.85106387036912\
+            \},\
+            "vertex5": \{\
+              "x": 0.805957128614157,\
+              "y": 0.850177277909949\
+            \},\
+            "vertex6": \{\
+              "x": 0.786515453639082,\
+              "y": 0.973936170212766\
+            \},\
+            "vertex7": \{\
+              "x": 0.504985014439105,\
+              "y": 0.968617021276596\
+            \},\
+            "vertex8": \{\
+              "x": 0.385468594217348,\
+              "y": 0.969503532571996\
+            \}\
+          \},\
+          "zone2": \{\
+            "name": "Zone 2",\
+            "state": 2,\
+            "vertex1": \{\
+              "x": 0.0190677966101695,\
+              "y": 0.0\
+            \},\
+            "vertex2": \{\
+              "x": 0.27018942409831,\
+              "y": 0.0\
+            \},\
+            "vertex3": \{\
+              "x": 0.298479568922627,\
+              "y": 0.0\
+            \},\
+            "vertex4": \{\
+              "x": 0.256106672353545,\
+              "y": 0.549645403598217\
+            \},\
+            "vertex5": \{\
+              "x": 0.280034910527208,\
+              "y": 0.942021276595745\
+            \},\
+            "vertex6": \{\
+              "x": 0.247756745023718,\
+              "y": 0.981028382321621\
+            \},\
+            "vertex7": \{\
+              "x": 0.0250498504486541,\
+              "y": 0.983687997371592\
+            \},\
+            "vertex8": \{\
+              "x": 0.0210618069497562,\
+              "y": 0.502659615049971\
+            \}\
+          \},\
+          "zone3": \{\
+            "name": "Zone 3",\
+            "state": 0,\
+            "vertex1": \{\
+              "x": 0.0,\
+              "y": 0.0\
+            \},\
+            "vertex2": \{\
+              "x": 0.0,\
+              "y": 0.0\
+            \},\
+            "vertex3": \{\
+              "x": 0.0,\
+              "y": 0.0\
+            \},\
+            "vertex4": \{\
+              "x": 0.0,\
+              "y": 0.0\
+            \},\
+            "vertex5": \{\
+              "x": 0.0,\
+              "y": 0.0\
+            \},\
+            "vertex6": \{\
+              "x": 0.0,\
+              "y": 0.0\
+            \},\
+            "vertex7": \{\
+              "x": 0.0,\
+              "y": 0.0\
+            \},\
+            "vertex8": \{\
+              "x": 0.0,\
+              "y": 0.0\
+            \}\
+          \}\
+        \},\
+        "motion_snooze_preset_profile": "low",\
+        "live_view_preset_profile": "highest",\
+        "live_view_presets": [\
+          "low",\
+          "middle",\
+          "high",\
+          "highest"\
+        ],\
+        "motion_snooze_presets": [\
+          "none",\
+          "low",\
+          "medium",\
+          "high"\
+        ],\
+        "doorbell_volume": 11,\
+        "chime_settings": \{\
+          "type": 0,\
+          "enable": true,\
+          "duration": 10\
+        \},\
+        "video_settings": \{\
+          "birton": null,\
+          "brightness": 16,\
+          "contrast": 80,\
+          "saturation": 48,\
+          "ae_level": 32\
+        \},\
+        "motion_announcement": false,\
+        "stream_setting": 0\
+      \},\
+      "features": \{\
+        "motions_enabled": true,\
+        "show_recordings": true,\
+        "advanced_motion_enabled": false,\
+        "people_only_enabled": false,\
+        "shadow_correction_enabled": false,\
+        "motion_message_enabled": false\
+      \},\
+      "owned": true,\
+      "alerts": \{\
+        "connection": "online"\
+      \},\
+      "motion_snooze": null,\
+      "owner": \{\
+        "id": 18626,\
+        "first_name": "redacted",\
+        "last_name": "redacted",\
+        "email": "redacted@me.com"\
+      \}\
+    \}\
+  ],\
+  "authorized_doorbots": [],\
+  "chimes": [\
+    \{\
+      "id": 580476,\
+      "description": "Hallway",\
+      "device_id": "d4f513eee",\
+      "time_zone": "America/Phoenix",\
+      "firmware_version": "1.2.3",\
+      "kind": "chime",\
+      "latitude": redacted,\
+      "longitude": redacted,\
+      "address": "redacted",\
+      "settings": \{\
+        "volume": 8,\
+        "ding_audio_user_id": null,\
+        "ding_audio_id": null,\
+        "motion_audio_user_id": null,\
+        "motion_audio_id": null\
+      \},\
+      "features": \{\
+        "ringtones_enabled": true\
+      \},\
+      "owned": true,\
+      "alerts": \{\
+        "connection": "online"\
+      \},\
+      "do_not_disturb": \{\
+        "seconds_left": 0\
+      \},\
+      "owner": \{\
+        "id": 18626,\
+        "first_name": "redacted",\
+        "last_name": "redacted",\
+        "email": "redacted@me.com"\
+      \}\
+    \}\
+  ],\
+  "stickup_cams": [\
+    \{\
+      "id": 1741493,\
+      "description": "Driveway",\
+      "device_id": "f45eab24d",\
+      "time_zone": "America/Phoenix",\
+      "subscribed": true,\
+      "subscribed_motions": true,\
+      "battery_life": "97",\
+      "external_connection": false,\
+      "firmware_version": "cam-1.7.129",\
+      "kind": "stickup_cam_v3",\
+      "latitude": redacted,\
+      "longitude": redacted,\
+      "address": \'93redacted",\
+      "settings": \{\
+        "enable_vod": 1,\
+        "exposure_control": 2,\
+        "motion_zones": [\
+          1,\
+          1,\
+          1,\
+          1,\
+          1\
+        ],\
+        "motion_snooze_preset_profile": "medium",\
+        "motion_snooze_presets": [\
+          "none",\
+          "low",\
+          "medium",\
+          "high"\
+        ],\
+        "live_view_preset_profile": "middle",\
+        "live_view_presets": [\
+          "low",\
+          "middle",\
+          "high",\
+          "highest"\
+        ],\
+        "pir_sensitivity_1": 0,\
+        "vod_suspended": 0,\
+        "doorbell_volume": 8,\
+        "vod_status": "enabled"\
+      \},\
+      "features": \{\
+        "motions_enabled": true,\
+        "show_recordings": true,\
+        "show_vod_settings": true\
+      \},\
+      "owned": true,\
+      "alerts": \{\
+        "connection": "online"\
+      \},\
+      "motion_snooze": null,\
+      "owner": \{\
+        "id": 186267,\
+        "first_name": "redacted",\
+        "last_name": "redacted",\
+        "email": "redacted@me.com"\
+      \}\
+    \}\
+  ]\
+\}\
+\
+\
+\
+\
+\pard\pardeftab720\partightenfactor0
+
+\b \cf2 SIP Information\
+\pard\pardeftab720\partightenfactor0
+
+\i\b0 \cf2 SIP_from seems to be static to the account\
+\pard\pardeftab720\partightenfactor0
+
+\i0 \cf2      \
+[\
+  \{\
+   \cf4  "id": 3594291776\cf2 ,\
+    "id_str": "3594291776",\
+    "state": "ringing",\
+    "protocol": "sip",\
+    "doorbot_id": 156746,\
+    "doorbot_description": "Front Door",\
+    "device_kind": "lpd_v1",\
+    "motion": true,\
+    "snapshot_url": "",\
+    "kind": "motion",\
+    "sip_server_ip": "13.56.25.194",\
+    "sip_server_port": "15063",\
+    "sip_server_tls": "false",\
+    "sip_session_id": "3b3p2i0-2043c1e2fi694m",\
+    "sip_from": "sip:redacted@ring.com",\
+    "sip_to": "sip:3b3p2i0-2043c1e2fi694m@13.56.25.194:15063;transport=tcp",\
+    "audio_jitter_buffer_ms": 0,\
+    "video_jitter_buffer_ms": 0,\
+    "sip_endpoints": null,\
+    "expires_in": 163,\
+    "now": 1496519967.54409,\
+    "optimization_level": 1,\
+    "sip_token": "a637e2a5a3212f6f06ebaf554f36ed7de4bf7c2573151a56c9f235",\
+    \cf4 "sip_ding_id": "3594291776"\cf2 \
+  \}\
+]}
